@@ -178,7 +178,7 @@ This comparison demonstrates that while Actor-Critic methods theoretically offer
 ## Author
 
 Carolina Li  
-LinkedIn: https://www.linkedin.com/in/carolinalyh/  
+LinkedIn: (https://www.linkedin.com/in/carolina-li/)
 GitHub: https://github.com/CatNinjaLuna
 
 ## License
