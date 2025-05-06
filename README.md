@@ -94,7 +94,7 @@ You can also choose whether to enable rendering to visualize the agent's behavio
 
 The REINFORCE algorithm successfully solved the CartPole-v1 environment after approximately 230 episodes:
 
-![REINFORCE Learning Curve](https://github.com/CatNinjaLuna/reinforce-cartpole/raw/main/policy_gradient_training_curve.png)
+![REINFORCE Learning Curve](https://github.com/CatNinjaLuna/reinforce-cartpole/blob/master/policy_gradient_training_curve.png)
 
 **Training Progression**:
 
@@ -116,7 +116,7 @@ The agent eventually achieved the perfect score of 500 (the maximum possible in 
 
 The Actor-Critic implementation shows a significantly different learning pattern:
 
-![Actor-Critic Learning Curve](https://github.com/CatNinjaLuna/reinforce-cartpole/raw/main/actor_critic_training_curve.png)
+![Actor-Critic Learning Curve](https://github.com/CatNinjaLuna/reinforce-cartpole/blob/master/actor_critic_training_curve.png)
 
 **Training Progression**:
 
@@ -136,7 +136,7 @@ The Actor-Critic agent did not solve the environment within the maximum episode 
 
 When comparing both methods directly:
 
-![REINFORCE vs Actor-Critic Comparison](https://github.com/CatNinjaLuna/reinforce-cartpole/raw/main/rl_methods_comparison.png)
+![REINFORCE vs Actor-Critic Comparison](https://github.com/CatNinjaLuna/reinforce-cartpole/blob/master/rl_methods_comparison.png)
 
 The comparison reveals several key insights:
 
