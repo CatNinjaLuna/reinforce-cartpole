@@ -1,4 +1,4 @@
-# RL-CartPole: Comparing Policy Gradient Methods in PyTorch
+# Reinforcement Learning: REINFORCE vs Actor-Critic on CartPole
 
 This repository implements and compares two Deep Reinforcement Learning (DRL) approaches to solve the `CartPole-v1` environment from OpenAI Gymnasium:
 
