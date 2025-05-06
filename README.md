@@ -61,7 +61,7 @@ The implementation includes:
 
 The REINFORCE algorithm successfully solved the CartPole-v1 environment after 221 episodes. Looking at the training results:
 
-![REINFORCE Learning Curve](https://github.com/CatNinjaLuna/reinforce-cartpole/raw/main/training_curve.png)
+![REINFORCE Learning Curve](https://github.com/CatNinjaLuna/reinforce-cartpole/blob/master/training_curve.png)
 
 ### Training Progression:
 
