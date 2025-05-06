@@ -1,14 +1,17 @@
-# Reinforce-CartPole: Deep RL with Policy Gradient in PyTorch
+# RL-CartPole: Comparing Policy Gradient Methods in PyTorch
 
-This repository implements a simple Deep Reinforcement Learning (DRL) agent using the REINFORCE algorithm — a classic policy gradient method — to solve the `CartPole-v1` environment from OpenAI Gymnasium.
+This repository implements and compares two Deep Reinforcement Learning (DRL) approaches to solve the `CartPole-v1` environment from OpenAI Gymnasium:
 
-## Deep Reinforcement Learning Architecture: REINFORCE
+1. REINFORCE - A classic policy gradient method
+2. Actor-Critic - A hybrid approach combining policy and value-based methods
 
-This project uses the REINFORCE algorithm, which belongs to the class of policy gradient methods in Deep RL. Instead of learning a value function to decide actions, REINFORCE directly learns a parameterized policy to maximize expected cumulative reward.
+## Implementation Architecture
 
-**Background**: REINFORCE is a classic algorithm in the policy gradient family of deep reinforcement learning (Deep RL) methods. Its main idea is to directly learn how to make decisions (a policy), without relying on learning a value function.
+### 1. REINFORCE (Policy Gradient)
 
-### Key Components
+The REINFORCE algorithm belongs to the class of policy gradient methods in Deep RL. Instead of learning a value function to decide actions, it directly learns a parameterized policy to maximize expected cumulative reward.
+
+**Key Components**:
 
 -  **Policy Network**:
 
@@ -31,6 +34,27 @@ This project uses the REINFORCE algorithm, which belongs to the class of policy 
    -  Training stops automatically when the agent achieves an average reward of 195.0+ over 100 consecutive episodes
    -  This follows OpenAI Gym's definition of "solving" the CartPole environment
 
+### 2. Actor-Critic
+
+The Actor-Critic algorithm combines policy-based and value-based methods:
+
+-  **Shared Network Architecture**:
+
+   -  Shared feature extraction layer (128 units)
+   -  Policy head (actor) outputs action probabilities
+   -  Value head (critic) estimates state values
+
+-  **Advantage-Based Updates**:
+
+   -  Uses the critic's value estimates as a baseline
+   -  Reduces variance in policy updates
+   -  Learns faster than pure policy gradient methods
+
+-  **Loss Function**:
+   -  Combined loss with both actor and critic components
+   -  Actor loss guides policy optimization
+   -  Critic loss improves value estimation
+
 ## How to Run
 
 ### Installation
@@ -38,20 +62,27 @@ This project uses the REINFORCE algorithm, which belongs to the class of policy 
 ```bash
 pip install gymnasium pygame torch
 pip install "numpy<2.0.0"  # Downgrade numpy for compatibility
+pip install matplotlib
 ```
 
 ### Run the Training Script
 
 ```bash
-python reinforce_cartpole.py
+python rl_cartpole.py
 ```
 
-### Implementation Details
+You'll be prompted to select which method to run:
 
-The implementation includes:
+1. REINFORCE (Policy Gradient) only
+2. Actor-Critic only
+3. Both methods with comparison
 
--  Policy network with one hidden layer (128 units)
--  Adam optimizer with learning rate of 1e-2
+You can also choose whether to enable rendering to visualize the agent's behavior during training.
+
+## Implementation Details
+
+-  Policy networks with one hidden layer (128 units)
+-  Adam optimizer with learning rate of 1e-2 for REINFORCE and 1e-3 for Actor-Critic
 -  Reward normalization for training stability
 -  Episode reward tracking with visual plotting
 -  Early stopping when CartPole is considered "solved"
@@ -59,27 +90,76 @@ The implementation includes:
 
 ## Results and Analysis
 
-The REINFORCE algorithm successfully solved the CartPole-v1 environment after 221 episodes. Looking at the training results:
+### REINFORCE (Policy Gradient)
 
-![REINFORCE Learning Curve](https://github.com/CatNinjaLuna/reinforce-cartpole/raw/main/training_curve.png)
+The REINFORCE algorithm successfully solved the CartPole-v1 environment after approximately 230 episodes:
 
-### Training Progression:
+![REINFORCE Learning Curve](https://github.com/CatNinjaLuna/reinforce-cartpole/raw/main/policy_gradient_training_curve.png)
 
--  **Initial Phase (Episodes 0-50)**: Agent performs poorly with low, inconsistent rewards around 20-30 per episode, indicating random exploration
--  **Exploration Phase (Episodes 50-100)**: Performance begins to fluctuate with occasional spikes up to 60-80, showing early policy improvements
--  **Learning Phase (Episodes 100-150)**: High variability with some episodes reaching 250+ reward, demonstrating effective learning but still unstable policy
--  **Stabilization Phase (Episodes 150-200)**: More consistent performance around 100+ reward with gradual improvement, as policy becomes more reliable
+**Training Progression**:
+
+-  **Initial Phase (Episodes 0-50)**: Agent performs poorly with low, inconsistent rewards around 20-30 per episode, showing the random exploration phase
+-  **Exploration Phase (Episodes 50-100)**: Performance begins to fluctuate with occasional spikes up to 100+, showing early policy improvements
+-  **Learning Phase (Episodes 100-150)**: High variability with some episodes reaching 300+ reward, demonstrating effective learning but still unstable policy
+-  **Intermediate Phase (Episodes 150-200)**: Multiple spikes of high performance followed by periods of lower performance, showing the stochastic nature of policy gradient methods
 -  **Breakthrough Phase (Episodes 200+)**: Rapid improvement leading to maximum reward (500) consistently, indicating optimal policy discovery
 
-The training curve shows classic reinforcement learning characteristics:
+The training curve shows classic policy gradient characteristics:
 
-1. High variance during early learning phases (exploration-exploitation tradeoff)
-2. Non-linear improvement with plateaus followed by sudden improvements
-3. Critical threshold behavior where performance rapidly jumps to optimal once key policy configurations are discovered
+1. High variance throughout training (the "noisy" nature of policy gradient methods)
+2. Non-linear improvement with periods of progress and regression
+3. Sudden performance jumps once critical policy configurations are discovered
 
-By episode 221, the agent achieved the perfect score of 500 (the maximum possible in this environment) with a 100-episode moving average exceeding 195, officially "solving" the environment according to OpenAI Gymnasium standards. The final average reward of 196.95 in episode 221 demonstrates that the agent can consistently balance the pole for the maximum duration.
+The agent eventually achieved the perfect score of 500 (the maximum possible in this environment), officially "solving" the environment according to OpenAI Gymnasium standards.
 
-This implementation demonstrates that despite REINFORCE being one of the simplest policy gradient methods, it can efficiently solve the CartPole problem with proper hyperparameter settings (learning rate, gamma value) and implementation details like return normalization.
+### Actor-Critic
+
+The Actor-Critic implementation shows a significantly different learning pattern:
+
+![Actor-Critic Learning Curve](https://github.com/CatNinjaLuna/reinforce-cartpole/raw/main/actor_critic_training_curve.png)
+
+**Training Progression**:
+
+-  **Initial Phase (Episodes 0-50)**: Rapid initial learning with early spikes in performance up to 70-80 reward
+-  **Decline Phase (Episodes 50-200)**: Performance actually decreases and stabilizes at a much lower level (around 10-15 reward)
+-  **Stabilization Phase (Episodes 200+)**: The agent maintains this low but stable performance for the remainder of training
+
+This learning pattern reveals that our Actor-Critic implementation:
+
+1. Initially discovers a somewhat effective policy
+2. Then converges to a suboptimal local minimum
+3. Fails to escape this suboptimal policy throughout extended training
+
+The Actor-Critic agent did not solve the environment within the maximum episode limit.
+
+### Comparison Analysis
+
+When comparing both methods directly:
+
+![REINFORCE vs Actor-Critic Comparison](https://github.com/CatNinjaLuna/reinforce-cartpole/raw/main/rl_methods_comparison.png)
+
+The comparison reveals several key insights:
+
+1. **Learning Stability**:
+
+   -  REINFORCE shows high variance but eventually reaches optimal performance
+   -  Actor-Critic shows lower variance but fails to reach high performance
+
+2. **Convergence Speed**:
+
+   -  Actor-Critic initially learns faster (first 20-30 episodes)
+   -  REINFORCE takes longer but achieves much better final performance
+
+3. **Exploration-Exploitation Balance**:
+
+   -  REINFORCE maintains better exploration throughout training
+   -  Actor-Critic appears to converge prematurely to a suboptimal policy
+
+4. **Implementation Sensitivity**:
+   -  The Actor-Critic implementation likely requires further hyperparameter tuning
+   -  Possible issues include learning rate, advantage normalization, or the balance between actor and critic losses
+
+This comparison demonstrates that while Actor-Critic methods theoretically offer advantages over pure policy gradient methods like REINFORCE, they can be more sensitive to implementation details and hyperparameter choices. In this specific implementation, REINFORCE clearly outperforms our Actor-Critic approach for the CartPole environment.
 
 ## References
 
